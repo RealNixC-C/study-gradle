@@ -1,8 +1,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/windows,eclipse,java,gradle
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,eclipse,java,gradle
 
-nixc_gradle/src/main/resources/*.properties
-nixc_gradle/src/main/resources/application.properties
+src/main/resources/*.properties
+src/main/resources/application.properties
 ### Eclipse ###
 .metadata
 bin/
