@@ -1,8 +1,8 @@
 package com.nixc.app.board.notice;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,15 +18,19 @@ public class NoticeController {
 	@Autowired
 	private NoticeService noticeService;
 	
+	@GetMapping
+	public Page<NoticeVO> list(Pageable pageable) throws Exception {
+		return noticeService.list(pageable);
+	}
+	
 	@ResponseBody
 	@GetMapping("{boardNo}")
 	public NoticeVO detail(@PathVariable("boardNo") Long boardNo) throws Exception {
+		NoticeVO noticeVO = noticeService.detail(boardNo);
+		System.out.println(noticeVO.getBoardFileVOs().getFirst().getSaveName());
+		noticeVO.getBoardContent();
 		return noticeService.detail(boardNo);
 	}
 	
-	@GetMapping
-	public List<NoticeVO> list() throws Exception {
-		return noticeService.list();
-	}
 	
 }

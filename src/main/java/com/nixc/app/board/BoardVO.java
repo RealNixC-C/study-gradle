@@ -2,6 +2,7 @@ package com.nixc.app.board;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -34,13 +35,15 @@ public class BoardVO {
 	@Column(name = "boardTitle", nullable = false, unique = true, length = 255, insertable = true, updatable = true)
 	private String boardTitle;
 	private String boardWriter;
-//	@Lob
-	@Column(columnDefinition = "LONGTEXT")
+	@Lob
+//	@Column(columnDefinition = "LONGTEXT")
 	private String boardContent;
 	@Temporal(TemporalType.TIMESTAMP) // 시간 매핑
 	@CreationTimestamp
 	private LocalDateTime boardDate;
-	@Column(columnDefinition = "BIGINT DEFAULT 0" ,insertable = false)
+//	@Column(columnDefinition = "BIGINT DEFAULT 0" ,insertable = false)
+	@Column
+	@ColumnDefault(value = "0") // 위에거랑 동일
 	private Long boardHit;
 	
 	@Transient // 테이블의 컬럼과 매핑관계를 제외
