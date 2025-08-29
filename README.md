@@ -1,0 +1,1 @@
+# Gradle + Mysql + JPA
