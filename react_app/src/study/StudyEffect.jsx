@@ -19,16 +19,19 @@ function StudyEffect() {
     console.log("EFFECT2");
   }, [count])
 
+  // 3. UnMount(DOM에서 사라질때) return 으로 clean up 코드 작성
   useEffect(()=> {
-
-    // Component가 Unmount 될 때 실행하고 싶은 코드
-    // clean up 코드
     return ()=> {
-      
+      // 안에 내용 작성가능
     }
-
   })
 
+  // 4. 빈배열조차 선언하지 않았을때
+  // 모든 렌더링 이후마다 실행됨
+  useEffect(()=> {
+    console.log("값이 변경될때 마다 실행")
+  })
+  
     return (
       <>
         <h1>Use Effects</h1>
