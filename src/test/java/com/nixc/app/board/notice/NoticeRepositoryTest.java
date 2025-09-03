@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @SpringBootTest
 @Slf4j
-@Transactional
+//@Transactional
 class NoticeRepositoryTest {
 
 	@Autowired
@@ -26,7 +26,7 @@ class NoticeRepositoryTest {
 	@Autowired
 	private NoticeFileRepository noticeFileRepository;
 	
-	//@Test
+	@Test
 	void test() throws Exception {
 		
 		// 간단한 방법1
@@ -88,7 +88,7 @@ class NoticeRepositoryTest {
 		}
 	}
 	
-	@Test
+//	@Test
 	void test4() {
 		Pageable pageable = PageRequest.of(1, 10, Sort.by("boardNo").descending());		
 		List<NoticeVO> list = noticeRepository.findByBoardTitleLike("%%", pageable);
