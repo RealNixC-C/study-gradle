@@ -1,4 +1,4 @@
-package com.nixc.app.config;
+package com.nixc.app.configs;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

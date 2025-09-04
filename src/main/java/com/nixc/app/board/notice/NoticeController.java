@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/notice/**")
+@RequestMapping("/api/notice/**")
 public class NoticeController {
 
 	@Autowired
@@ -35,16 +36,19 @@ public class NoticeController {
 	
 	@PostMapping("add")
 	@ResponseBody
-	public boolean add(NoticeVO noticeVO) throws Exception {
-		noticeVO.setBoardHit(0L);
-		boolean result = false;
-		noticeVO = noticeService.add(noticeVO);
+	public boolean add(NoticeVO noticeVO, MultipartFile[] attaches) throws Exception {
+//		noticeVO.setBoardHit(0L);
+//		boolean result = false;
+//		noticeVO = noticeService.add(noticeVO);
+//		
+//		if(noticeVO != null) {
+//			result = true;
+//		}
+//		
+//		return result;
+		System.out.println(attaches);
 		
-		if(noticeVO != null) {
-			result = true;
-		}
-		
-		return result; 
+		return false;
 	}
 	
 }
