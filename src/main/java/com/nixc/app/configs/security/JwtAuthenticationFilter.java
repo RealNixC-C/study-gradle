@@ -7,14 +7,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public class JwtAuthenticationFilter extends BasicAuthenticationFilter{
+public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
 	private JwtTokenManager jwtTokenManager;
 	
@@ -22,65 +20,36 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter{
 		super(authenticationManager);
 		this.jwtTokenManager = jwtTokenManager;
 	}
-	
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
+		// ex) Authorization: Bearer ${ACCESS_TOKEN}
+		// Bearer ${ACCESS_TOKEN
+		String header = request.getHeader("Authorization");
 		
-		// 1. 토큰을 꺼냄
-		Cookie[] cookies = request.getCookies();
-		String token = "";
-		
-		if(cookies != null && cookies.length != 0) {
-			for (Cookie cookie : cookies) {
-				if(cookie.getName().equals("accessToken")) {
-					token = cookie.getValue();
-					break;
-				}
-			}
-		}
-		
-		System.out.println("Token : " + token);
-		// 2. 토큰이 비어있지 않을때 검증
-		if(token != null && token.length() != 0) {
+		// 헤더가 비어있지 않고 Bearer로 시작하는지
+		if(header != null && header.startsWith("Bearer")) {
+			// Bearer를 제외한 토큰값을 추출
+			header = header.substring(header.indexOf(" ") + 1);
+			
+			// token 검증 진행
 			try {
-				// 토큰 매니저 클래스에 생성한 토큰 검증 메서드를 사용해 검증 완료 후 세션에 추가 
-				Authentication authentication = jwtTokenManager.getAuthenticationByToken(token);
+				Authentication authentication = jwtTokenManager.verifyToken(header);
+				// 성공시 authentication을 session에 넣어주기
 				SecurityContextHolder.getContext().setAuthentication(authentication);
+				
 				
 			} catch (Exception e) {
 				e.printStackTrace();
-				
-				// Security Exception 또는 Malformed Exception 또는 Signature Exception : 유효하지 않는 JWT서명
-				// ExpiredJwtException		: 기간이 만료된 토큰 // 만료 예외일 경우 refresh token을 사용하는것도 고려
-				// Unsupported Exception	: 지원되지 않는 토큰
-				// IllegalArgumentException	: 잘못된 토큰
-				
-				if(e instanceof ExpiredJwtException) {
-					for(Cookie cookie : cookies) {
-						if(cookie.getName().equals("refreshToken")) {
-							String newToken = cookie.getValue();
-							try {
-								Authentication authentication = jwtTokenManager.getAuthenticationByToken(newToken);
-								SecurityContextHolder.getContext().setAuthentication(authentication);
-								newToken = jwtTokenManager.createAccessToken(authentication);
-								
-								Cookie c = new Cookie("accessToken", newToken);
-								c.setPath("/");
-								c.setMaxAge(180);
-								c.setHttpOnly(true);
-								
-								response.addCookie(c);
-							} catch (Exception ex) {
-								ex.printStackTrace();
-							}
-						}
-					}
-				}
+				// access token이 만료되었지만, refresh token이 유효 하다면
+				// access token을 새로 발긊하고, 로그인 시키고 doFilter로 통과
 			}
 		}
 		
 		chain.doFilter(request, response);
 	}
 	
+	
+
 }

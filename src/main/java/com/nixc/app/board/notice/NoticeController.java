@@ -3,6 +3,7 @@ package com.nixc.app.board.notice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,8 +21,13 @@ public class NoticeController {
 	@Autowired
 	private NoticeService noticeService;
 	
+	@Autowired
+	private PasswordEncoder encoder;
+	
 	@GetMapping
 	public Page<NoticeVO> list(Pageable pageable) throws Exception {
+		System.out.println(encoder.encode("test"));
+		System.out.println("요청");
 		return noticeService.list(pageable);
 	}
 	

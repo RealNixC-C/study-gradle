@@ -17,7 +17,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name = "notice_files")
+@Table(name = "notice_file")
 public class NoticeFileVO {
 
 	@Id

@@ -1,7 +1,13 @@
 package com.nixc.app.member;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -20,7 +26,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "member")
-public class MemberVO {
+public class MemberVO implements UserDetails {
 
 	@Id
 	private String username;
@@ -34,4 +40,18 @@ public class MemberVO {
 	
 	@OneToMany(mappedBy = "memberVO", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<MemberRoleVO> memberRoleVOs;
+	
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		List<GrantedAuthority> list = new ArrayList<>();
+		for (MemberRoleVO memberRoleVO : memberRoleVOs) {
+			list.add(new SimpleGrantedAuthority(memberRoleVO.getRoleVO().getRoleName()));
+		}
+		return list;
+	}
+
+//	@Override
+//	public String getUsername() {
+//		return this.memberId;
+//	}
 }
