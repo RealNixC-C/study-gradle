@@ -11,7 +11,12 @@ function List() {
 
   // 처음 한번과 page가 바꼈을때만 랜더링 실행
   useEffect(() => {
-    fetch(`http://localhost/api/notice?page=${page}`)
+    fetch(`http://localhost/api/notice?page=${page}`, {
+      method : "GET",
+      headers : {
+        Authorization: "Bearer " + sessionStorage.getItem("accessToken")
+      }
+    })
       .then(r => r.json())
       .then(r => {
         console.log(r)

@@ -1,11 +1,13 @@
 export default function Login() {
 
+  // const nav = useNavigate();
+
   function login(e) {
     e.preventDefault();
 
     const form = new FormData(e.target);
 
-    let all = Object.fromEntries(form.entries)
+    let all = Object.fromEntries(form.entries())
 
     console.log(all);
 
@@ -13,8 +15,15 @@ export default function Login() {
       method : "POST",
       body : form
     })
-    .then(r => r.json())
-    .then(r => console.log(r))
+    // .then(r => r.text())
+    // .then(r => console.log(r))
+    .then(r => {
+      const header = r.headers;
+      console.log(header.get("accessToken"));
+      localStorage.setItem("accessToken", header.get("accessToken"));
+      // localStorage.setItem("refreshToken", header.get("refreshToken"));
+      // nav("/");
+    })
     .catch(e => console.log(e))
   }
 
